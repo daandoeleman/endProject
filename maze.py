@@ -1,7 +1,7 @@
 import random
 from grid_element import GridElement
 from random import *
-
+from pygame import *
 
 class Maze:
     """
@@ -25,7 +25,7 @@ class Maze:
         self.start = self.grid[30][3]
         self.target = self.grid[30][31]
         self.reset_all()
-        # random.seed(datetime.now())
+
 
     """
     Resets the GridElements of the maze

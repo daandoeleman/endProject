@@ -4,6 +4,8 @@ from keyboard_handler import KeyboardHandler
 from maze import Maze
 from search import Search
 from background import Background
+import time
+import random
 
 class Game:
     """
@@ -15,8 +17,6 @@ class Game:
         self.screen_size = (1300, 800)
         self.screen = pygame.display.set_mode(self.screen_size)
         self.keyboard_handler = KeyboardHandler()
-        self.font = pygame.font.SysFont(pygame.font.get_fonts()[0], 64)
-        self.time = pygame.time.get_ticks()
         self.maze = Maze(self.screen, self.screen_size)
         self.maze.generate_clouds(9)
         self.search = Search(self.maze, self.screen)
@@ -29,15 +29,20 @@ class Game:
     change this, unless you know what you are doing.
     """
     def game_loop(self):
-        current_time = pygame.time.get_ticks()
-        delta_time = current_time - self.time
-        self.time = current_time
         self.handle_events()
-        self.update_game(delta_time)
+        self.update_game()
         self.draw_components()
 
-    def update_game(self, dt):
-        pass
+    def update_game(self):
+        curr_time = round(time.time() * 1000)
+
+        if self.search.drawing_path is False:
+            x = random.randint(1,64)
+            y = random.randint(1,5)
+            self.maze.set_source(self.maze.grid[x][y])
+            self.maze.set_target(self.maze.grid[10][30])
+            self.search.a_star_search()
+
 
     def draw_components(self):
         self.screen.fill([92, 189, 85])
@@ -47,12 +52,12 @@ class Game:
 
         pygame.display.flip()
 
-    def draw_score(self):
-        text = self.font.render(str(self.maze.target.distance), True, (0,0,0))
-        self.screen.blit(text, (self.screen_size[0] / 2 - 64, 20))
-
     def reset(self):
         pass
+
+    def spawn_enemy(self):
+        pass
+
 
     """
     Method 'handle_event' loop over all the event types and 
@@ -82,21 +87,12 @@ class Game:
     def handle_key_down(self, event):
         self.keyboard_handler.key_pressed(event.key)
 
-        if event.key == pygame.K_a:
-            print("Starting A* search")
-            self.search.a_star_search()
-
-
-
     """
     This method will remove a released button 
     from list 'keyboard_handler.pressed'.
     """
-
     def handle_key_up(self, event):
         self.keyboard_handler.key_released(event.key)
-
-
 
     """
     Similar to void mouseMoved() in Processing
@@ -112,6 +108,7 @@ class Game:
         y = int(event.pos[1] / self.maze.cell_height)
         if event.button==1:
             self.maze.set_source(self.maze.grid[x][y])
+            self.search.a_star_search()
         if event.button == 3:
             self.maze.set_target(self.maze.grid[x][y])
 
