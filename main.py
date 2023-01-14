@@ -4,6 +4,7 @@ from keyboard_handler import KeyboardHandler
 from maze import Maze
 from search import Search
 from background import Background
+from ufo import Ufo
 import time
 import random
 
@@ -14,12 +15,14 @@ class Game:
     """
     def __init__(self):
         pygame.init()
+
         self.screen_size = (1300, 800)
         self.screen = pygame.display.set_mode(self.screen_size)
         self.keyboard_handler = KeyboardHandler()
         self.maze = Maze(self.screen, self.screen_size)
         self.maze.generate_clouds(9)
         self.search = Search(self.maze, self.screen)
+        self.ufo = Ufo(self.screen_size)
         self.background = Background(self.screen, self.screen_size)
 
     """
@@ -34,21 +37,14 @@ class Game:
         self.draw_components()
 
     def update_game(self):
-        curr_time = round(time.time() * 1000)
-
-        if self.search.drawing_path is False:
-            x = random.randint(1,64)
-            y = random.randint(1,5)
-            self.maze.set_source(self.maze.grid[x][y])
-            self.maze.set_target(self.maze.grid[10][30])
-            self.search.a_star_search()
-
+        self.ufo.update(self.search, self.maze)
 
     def draw_components(self):
         self.screen.fill([92, 189, 85])
         self.background.display()
         self.maze.draw_maze(self.screen)
         self.search.draw_path()
+        self.ufo.draw(self.screen)
 
         pygame.display.flip()
 

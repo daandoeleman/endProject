@@ -115,8 +115,9 @@ class GridElement:
     """
 
     def draw_grid_element(self, surface):
-        draw.rect(surface, self.color,
-                   (self.position[0] * self.size[0], self.position[1] * self.size[1], self.size[0], self.size[1]), 0)
+        # the rect for the source and target
+        # draw.rect(surface, self.color,
+        #            (self.position[0] * self.size[0], self.position[1] * self.size[1], self.size[0], self.size[1]), 0)
 
         # discard the directions where neighbours are
         compass = [(0, -1), (1, 0), (0, 1), (-1, 0)]  # The four directions
