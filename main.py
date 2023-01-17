@@ -5,8 +5,6 @@ from maze import Maze
 from search import Search
 from background import Background
 from ufo import Ufo
-import time
-import random
 
 class Game:
     """
