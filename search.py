@@ -15,6 +15,18 @@ class Search:
         self.timer = 0
         self.drawing_speed = 20
 
+        # load all the images
+        self.enemy1 = image.load('enemy1.png')
+        self.enemy2 = image.load('enemy2.png')
+        self.enemy3 = image.load('enemy3.png')
+        self.enemy4 = image.load('enemy4.png')
+
+        # scale all the images
+        self.enemy_1 = transform.scale(self.enemy1, (75, 90))
+        self.enemy_2 = transform.scale(self.enemy2, (75, 90))
+        self.enemy_3 = transform.scale(self.enemy3, (75, 90))
+        self.enemy_4 = transform.scale(self.enemy4, (75, 90))
+
     def draw_path(self):
         if self.drawing_path is True:
             self.move_to_target()
@@ -24,13 +36,13 @@ class Search:
         enemy_number = random.randint(1,4)
 
         if enemy_number == 1:
-            self.enemy = image.load('enemy1.png')
+            self.enemy = self.enemy_1
         elif enemy_number == 2:
-            self.enemy = image.load('enemy2.png')
+            self.enemy = self.enemy_2
         elif enemy_number == 3:
-            self.enemy = image.load('enemy3.png')
+            self.enemy = self.enemy_3
         elif enemy_number == 4:
-            self.enemy = image.load('enemy4.png')
+            self.enemy = self.enemy_4
 
         self.graph.reset_state()                                                                    # reset the graph
 
@@ -96,8 +108,7 @@ class Search:
             else:
                 self.drawing_path = False
 
-        enemy = transform.scale(self.enemy, (75, 90))
-        self.screen.blit(enemy, (self.x-25, self.y-40))
+        self.screen.blit(self.enemy, (self.x-25, self.y-40))
 
         self.timer += 1
 

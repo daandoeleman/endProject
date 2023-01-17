@@ -16,7 +16,7 @@ class Maze:
         self.screen_size = screen_size
         self.cell_width = 20
         self.cell_height = 20
-        self.grid_size = (int(screen_size[0]/self.cell_width), int((screen_size[1]-130)/self.cell_height))
+        self.grid_size = (int(screen_size[0]/self.cell_width), int((screen_size[1])/self.cell_height))
         self.grid = []
         for x in range(self.grid_size[0]):
             self.grid.append([])
@@ -64,12 +64,12 @@ class Maze:
             print(row)
         return None
 
-    def draw_maze(self, surface):
+    def draw_maze(self):
         # print all the lines in the grid, besides the outersquare lines
         for row in range(self.grid_size[0]):
             for col in range(self.grid_size[1]):
                 if row > 0 and row < self.grid_size[0]-1 and col > 0 and col < self.grid_size[1]-1:
-                    self.grid[row][col].draw_grid_element(surface)
+                    self.grid[row][col].draw_grid_element(self.screen)
         return None
 
     def possible_neighbours(self, cell):

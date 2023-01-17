@@ -21,8 +21,8 @@ class Game:
         self.maze = Maze(self.screen, self.screen_size)
         self.maze.generate_clouds(9)
         self.search = Search(self.maze, self.screen)
-        self.ufo = Ufo(self.screen_size)
-        self.canon = Canon()
+        self.ufo = Ufo(self.screen_size,self.screen)
+        self.canon = Canon(self.screen, self.screen_size)
         self.background = Background(self.screen, self.screen_size)
 
     """
@@ -37,16 +37,17 @@ class Game:
         self.draw_components()
 
     def update_game(self):
-        self.ufo.update(self.search, self.maze)
+        self.ufo.update(self.search, self.maze, self.canon)
         self.canon.read_data()
         self.canon.proces_data()
 
     def draw_components(self):
         self.screen.fill([92, 189, 85])
         self.background.display()
-        self.maze.draw_maze(self.screen)
+        self.maze.draw_maze()
         self.search.draw_path()
-        self.ufo.draw(self.screen)
+        self.ufo.draw()
+        self.canon.display()
 
         pygame.display.flip()
 

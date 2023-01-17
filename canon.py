@@ -1,14 +1,16 @@
 import pyfirmata
 import time
 import inspect
+import pygame
 
 class Canon:
 
-    def __init__(self):
+    def __init__(self, screen, screen_size):
         if not hasattr(inspect, 'getargspec'):
             inspect.getargspec = inspect.getfullargspec
 
         self.board = pyfirmata.Arduino('COM18')
+        self.screen = screen
 
         self.it = pyfirmata.util.Iterator(self.board)
         self.it.start()
@@ -35,8 +37,14 @@ class Canon:
         self.IN2 = self.board.get_pin('d:8:o')
         self.EN = self.board.get_pin('d:9:o')
 
-        # The position of the cart:
-        self.cart_position = 0
+        # The position of the cart is at the center of the screen:
+        self.cart_position = screen_size[0]/2
+        self.cart_y = 580
+
+        self.canon = pygame.image.load('tank2.png')
+        self.visor = pygame.image.load('cannon2.png')
+
+        self.picture_canon = pygame.transform.scale(self.canon, (250, 250))
 
     def read_data(self):
         # Read the state of the buttons
@@ -45,12 +53,12 @@ class Canon:
         self.drive_right_button_state = self.drive_right_button.read()
 
         # The potmeter value in a range from 0 to 100 degrees
-        self.potentiometer_value = float(0 if self.analog_input.read() is None else self.analog_input.read()-0.2444)*309
+        self.angle = (float(0 if self.analog_input.read() is None else self.analog_input.read()-0.2444)*309)*(60/100)
 
         # print(shoot_button_state)
         # print(drive_left_button_state)
         # print(drive_right_button_state)
-        # print(potentiometer_value)
+        # print(self.angle)
 
     def proces_data(self):
         # Change the direction of rotation dependent on which button is pressed
@@ -60,7 +68,7 @@ class Canon:
             time.sleep(0.02)
             self.EN.write(1)
             time.sleep(0.1)
-            self.cart_position -= 1
+            self.cart_position -= 5
             # print("left")
             print(self.cart_position)
         elif self.drive_right_button_state is True:
@@ -69,7 +77,7 @@ class Canon:
             time.sleep(0.02)
             self.EN.write(1)
             time.sleep(0.1)
-            self.cart_position += 1
+            self.cart_position += 5
             # print("right")
             print(self.cart_position)
         else:
@@ -90,6 +98,7 @@ class Canon:
                                 self.shoot_intensity -= 1        # limit the counter to max 50
         else:
             if self.shoot_intensity > 0:         # if the button is released then shoot with the given strength
+                self.shoot(self.shoot_intensity)
                 print("shoot", self.shoot_intensity)
 
             # turn all the leds off and reset counter
@@ -102,3 +111,13 @@ class Canon:
 
         # Small delay
         time.sleep(0.02)
+
+    def display(self):
+        self.picture_visor = pygame.transform.rotate(pygame.transform.scale(self.visor, (300, 375)), self.angle-30)
+
+        self.screen.blit(self.picture_visor, (self.cart_position - int(self.picture_visor.get_width() / 2) + 250/2,self.cart_y - int(self.picture_visor.get_height() / 2) + 250/2 + 10))
+
+        self.screen.blit(self.picture_canon, (self.cart_position, self.cart_y))
+
+    def shoot(self, intensity):
+        pass
