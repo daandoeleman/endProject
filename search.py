@@ -1,5 +1,6 @@
 import bisect
 from pygame import *
+import random
 
 class Search:
 
@@ -19,6 +20,18 @@ class Search:
             self.move_to_target()
 
     def a_star_search(self):
+
+        enemy_number = random.randint(1,4)
+
+        if enemy_number == 1:
+            self.enemy = image.load('enemy1.png')
+        elif enemy_number == 2:
+            self.enemy = image.load('enemy2.png')
+        elif enemy_number == 3:
+            self.enemy = image.load('enemy3.png')
+        elif enemy_number == 4:
+            self.enemy = image.load('enemy4.png')
+
         self.graph.reset_state()                                                                    # reset the graph
 
         priority_queue = [self.graph.start]                                                         # add the starting node to the priority queue
@@ -73,7 +86,7 @@ class Search:
         print("Path length is: {}".format(self.graph.target.distance))
 
     def move_to_target(self):
-        if self.timer % self.drawing_speed is 0:
+        if self.timer % self.drawing_speed == 0:
             self.x = self.x_coordinates[0]*20
             self.y = self.y_coordinates[0]*20
 
@@ -83,7 +96,8 @@ class Search:
             else:
                 self.drawing_path = False
 
-        draw.rect(self.screen, (10, 11, 12), Rect(self.x, self.y, 20, 20))
+        enemy = transform.scale(self.enemy, (75, 90))
+        self.screen.blit(enemy, (self.x-25, self.y-40))
 
         self.timer += 1
 

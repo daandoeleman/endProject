@@ -5,6 +5,7 @@ from maze import Maze
 from search import Search
 from background import Background
 from ufo import Ufo
+from canon import Canon
 
 class Game:
     """
@@ -21,6 +22,7 @@ class Game:
         self.maze.generate_clouds(9)
         self.search = Search(self.maze, self.screen)
         self.ufo = Ufo(self.screen_size)
+        self.canon = Canon()
         self.background = Background(self.screen, self.screen_size)
 
     """
@@ -36,6 +38,8 @@ class Game:
 
     def update_game(self):
         self.ufo.update(self.search, self.maze)
+        self.canon.read_data()
+        self.canon.proces_data()
 
     def draw_components(self):
         self.screen.fill([92, 189, 85])
