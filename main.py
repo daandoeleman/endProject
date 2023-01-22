@@ -39,29 +39,37 @@ class Game:
     """
     def game_loop(self):
         self.handle_events()
-        self.update_game()
         self.draw_components()
+        self.update_game()
 
     def update_game(self):
         self.ufo.update(self.search, self.maze, self.canon)
         self.canon.read_data()
         self.canon.proces_data()
 
+        #  if there is a collision between the cart and the enemy
         if self.search.x > self.canon.cart_position+60 and self.search.x < self.canon.cart_position+160 and self.search.y > self.canon.cart_y+50 and self.search.y < self.canon.cart_y+150:
+            # finish the game and show the end screen
             self.game_finished = True
 
+            # reset the enemy so that the collision won't keep happening again and again and give it a new path to avoid keeping moving on the collision path
+            self.maze.set_source(self.maze.grid[0][0])
+            self.search.a_star_search()
+            self.search.draw_path()
+
     def draw_components(self):
-        self.screen.fill([92, 189, 85])
-        self.background.display()
-        self.maze.draw_maze()
-        self.search.draw_path()
-        self.ufo.draw()
-        self.canon.display()
 
         if self.game_started is False:
             self.start_screen.display()
         elif self.game_finished is True:
             self.end_screen.display()
+        else:
+            self.screen.fill([92, 189, 85])
+            self.background.display()
+            self.maze.draw_maze()
+            self.search.draw_path()
+            self.ufo.draw()
+            self.canon.display()
 
         pygame.display.flip()
 
@@ -94,8 +102,14 @@ class Game:
         self.keyboard_handler.key_pressed(event.key)
 
         if event.key == pygame.K_SPACE:
-            self.game_finished = False
+            # start the game and stop showing the end screen
             self.game_started = True
+            self.game_finished = False
+
+            # set the enemy to the position of the ufo and start the search
+            self.maze.set_source(self.maze.grid[int((self.ufo.x+self.ufo.ufo_width/2)/self.maze.cell_width)][int((self.ufo.y+self.ufo.ufo_height/2)/self.maze.cell_height)])
+            self.search.a_star_search()
+            self.search.draw_path()
 
 
     """
@@ -128,7 +142,6 @@ class Game:
     """
     def handle_mouse_released(self, event):
         pass
-
 
 if __name__ == "__main__":
     game = Game()
