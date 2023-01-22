@@ -21,8 +21,8 @@ class Background:
         self.tiles = math.ceil(screen_size[0] / self.brick_size) + 1
 
     def display(self):
-        draw.rect(self.screen, (66, 149, 245), Rect(0, 0, self.screen_size[0], self.screen_size[1]-130))
+            draw.rect(self.screen, (66, 149, 245), Rect(0, 0, self.screen_size[0], self.screen_size[1]-130))
 
-        for i in range(0, self.tiles):
-            self.screen.blit(self.brick_picture, (i * self.brick_size, self.screen_size[1] - self.brick_size))
-            self.screen.blit(self.rails_picture, (i * self.brick_size, self.screen_size[1] - 1.6*self.brick_size))
+            for i in range(0, self.tiles):
+                self.screen.blit(self.brick_picture, (i * self.brick_size, self.screen_size[1] - self.brick_size))
+                self.screen.blit(self.rails_picture, (i * self.brick_size, self.screen_size[1] - 1.6*self.brick_size))

@@ -6,6 +6,8 @@ from search import Search
 from background import Background
 from ufo import Ufo
 from canon import Canon
+from end_screen import End_screen
+from start_screen import Start_screen
 
 class Game:
     """
@@ -24,6 +26,10 @@ class Game:
         self.ufo = Ufo(self.screen_size,self.screen)
         self.canon = Canon(self.screen, self.screen_size)
         self.background = Background(self.screen, self.screen_size)
+        self.end_screen = End_screen(self.screen, self.screen_size)
+        self.start_screen = Start_screen(self.screen, self.screen_size)
+        self.game_finished = False
+        self.game_started = False
 
     """
     Method 'game_loop' will be executed every frame to drive
@@ -41,21 +47,24 @@ class Game:
         self.canon.read_data()
         self.canon.proces_data()
 
+        if self.search.x > self.canon.cart_position+60 and self.search.x < self.canon.cart_position+160 and self.search.y > self.canon.cart_y+50 and self.search.y < self.canon.cart_y+150:
+            self.game_finished = True
+
     def draw_components(self):
-        self.screen.fill([92, 189, 85])
-        self.background.display()
-        self.maze.draw_maze()
-        self.search.draw_path()
-        self.ufo.draw()
-        self.canon.display()
+
+        if self.game_started is False:
+            self.start_screen.display()
+        elif self.game_finished is True:
+            self.end_screen.display()
+        else:
+            self.screen.fill([92, 189, 85])
+            self.background.display()
+            self.maze.draw_maze()
+            self.search.draw_path()
+            self.ufo.draw()
+            self.canon.display()
 
         pygame.display.flip()
-
-    def reset(self):
-        pass
-
-    def spawn_enemy(self):
-        pass
 
 
     """
@@ -85,6 +94,11 @@ class Game:
     """
     def handle_key_down(self, event):
         self.keyboard_handler.key_pressed(event.key)
+
+        if event.key == pygame.K_SPACE:
+            self.game_finished = False
+            self.game_started = True
+
 
     """
     This method will remove a released button 

@@ -1,5 +1,4 @@
 import pyfirmata
-import time
 import inspect
 import pygame
 
@@ -38,7 +37,8 @@ class Canon:
         self.EN = self.board.get_pin('d:9:o')
 
         # The position of the cart is at the center of the screen:
-        self.cart_position = screen_size[0]/2
+        self.cart_position = screen_size[0]/2-125
+        self.cart_speed = 3
         self.cart_y = 580
 
         self.canon = pygame.image.load('tank2.png')
@@ -53,7 +53,7 @@ class Canon:
         self.drive_right_button_state = self.drive_right_button.read()
 
         # The potmeter value in a range from 0 to 100 degrees
-        self.angle = (float(0 if self.analog_input.read() is None else self.analog_input.read()-0.2444)*309)*(60/100)
+        self.angle = (float(0 if self.analog_input.read() is None else -(self.analog_input.read()-0.2444)*309)*(60/100))
 
         # print(shoot_button_state)
         # print(drive_left_button_state)
@@ -65,21 +65,17 @@ class Canon:
         if self.drive_left_button_state is True:
             self.IN1.write(0)
             self.IN2.write(1)
-            time.sleep(0.02)
             self.EN.write(1)
-            time.sleep(0.1)
-            self.cart_position -= 5
+            self.cart_position -= self.cart_speed
             # print("left")
-            print(self.cart_position)
+            # print(self.cart_position)
         elif self.drive_right_button_state is True:
             self.IN1.write(1)
             self.IN2.write(0)
-            time.sleep(0.02)
             self.EN.write(1)
-            time.sleep(0.1)
-            self.cart_position += 5
+            self.cart_position += self.cart_speed
             # print("right")
-            print(self.cart_position)
+            # print(self.cart_position)
         else:
             self.EN.write(0)
 
@@ -109,11 +105,8 @@ class Canon:
             self.led5.write(0)
             self.shoot_intensity = 0
 
-        # Small delay
-        time.sleep(0.02)
-
     def display(self):
-        self.picture_visor = pygame.transform.rotate(pygame.transform.scale(self.visor, (300, 375)), self.angle-30)
+        self.picture_visor = pygame.transform.rotate(pygame.transform.scale(self.visor, (300, 375)), self.angle+30)
 
         self.screen.blit(self.picture_visor, (self.cart_position - int(self.picture_visor.get_width() / 2) + 250/2,self.cart_y - int(self.picture_visor.get_height() / 2) + 250/2 + 10))
 

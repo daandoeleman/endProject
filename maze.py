@@ -1,7 +1,5 @@
-import random
 from grid_element import GridElement
 from random import *
-from pygame import *
 
 class Maze:
     """
