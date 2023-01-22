@@ -51,21 +51,19 @@ class Game:
             self.game_finished = True
 
     def draw_components(self):
+        self.screen.fill([92, 189, 85])
+        self.background.display()
+        self.maze.draw_maze()
+        self.search.draw_path()
+        self.ufo.draw()
+        self.canon.display()
 
         if self.game_started is False:
             self.start_screen.display()
         elif self.game_finished is True:
             self.end_screen.display()
-        else:
-            self.screen.fill([92, 189, 85])
-            self.background.display()
-            self.maze.draw_maze()
-            self.search.draw_path()
-            self.ufo.draw()
-            self.canon.display()
 
         pygame.display.flip()
-
 
     """
     Method 'handle_event' loop over all the event types and 
