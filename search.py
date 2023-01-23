@@ -98,17 +98,23 @@ class Search:
         print("Path length is: {}".format(self.graph.target.distance))
 
     def move_to_target(self):
+        # dependend on the drawing speed, follow the path stored in the coordinates lists
         if self.timer % self.drawing_speed == 0:
             self.x = self.x_coordinates[0]*20
             self.y = self.y_coordinates[0]*20
 
+            # if not at target then remove the just made step
             if len(self.x_coordinates) > 1:
                 self.x_coordinates.pop(0)
                 self.y_coordinates.pop(0)
+
+            # otherwise increase drawing speed and stop drawing a path
             else:
                 self.drawing_path = False
 
+        # display the enemy
         self.screen.blit(self.enemy, (self.x-25, self.y-40))
 
+        # increase the timer
         self.timer += 1
 

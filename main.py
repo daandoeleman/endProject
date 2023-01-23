@@ -58,6 +58,25 @@ class Game:
             self.search.a_star_search()
             self.search.draw_path()
 
+            # reset the drawing speed (the difficulty)
+            self.search.drawing_speed = 20
+
+        # if there is a collision between the enemy and one of the bullets then reset enemy
+        for bullet in self.canon.bullets:
+            if self.search.x > bullet.x + 90 and self.search.x < bullet.x + 130 and self.search.y > bullet.y + 100 and self.search.y < bullet.y + 140:
+                # reset the enemy to the position of the ufo and start the search
+                self.maze.set_source(self.maze.grid[int((self.ufo.x + self.ufo.ufo_width / 2) / self.maze.cell_width)][int((self.ufo.y + self.ufo.ufo_height / 2) / self.maze.cell_height)])
+                self.search.a_star_search()
+                self.search.draw_path()
+
+                # remove the bullet which killed the enemy
+                self.canon.bullets.remove(bullet)
+
+                # increase the drawing speed of the enemy, so increase the difficulty, but maximise it at 1
+                self.search.drawing_speed = int(self.search.drawing_speed/1.2)
+                if self.search.drawing_speed == 0:
+                    self.search.drawing_speed = 1
+
     def draw_components(self):
 
         if self.game_started is False:

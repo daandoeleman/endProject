@@ -11,6 +11,7 @@ class Canon:
 
         self.board = pyfirmata.Arduino('COM18')
         self.screen = screen
+        self.screen_size = screen_size
 
         self.it = pyfirmata.util.Iterator(self.board)
         self.it.start()
@@ -38,8 +39,8 @@ class Canon:
         self.EN = self.board.get_pin('d:9:o')
 
         # The position of the cart is at the center of the screen:
-        self.cart_x = screen_size[0] / 2 - 125
-        self.cart_speed = 3
+        self.cart_x = self.screen_size[0] / 2 - 125
+        self.cart_speed = 5
         self.cart_y = 580
         self.angle = 0
 
@@ -98,7 +99,7 @@ class Canon:
         else:
             if self.shoot_intensity > 0:         # if the button is released then shoot with the given strength
                 self.shoot(self.shoot_intensity)
-                print("shoot", self.shoot_intensity)
+                # print("shoot", self.shoot_intensity)
 
             # turn all the leds off and reset counter
             self.led1.write(0)
@@ -109,17 +110,24 @@ class Canon:
             self.shoot_intensity = 0
 
     def display(self):
+        # display all the bullets
+        for bullet in self.bullets:
+            bullet.display()
+
         self.picture_visor = pygame.transform.rotate(pygame.transform.scale(self.visor, (300, 375)), self.angle+30)
 
         self.screen.blit(self.picture_visor, (self.cart_x - int(self.picture_visor.get_width() / 2) + 250 / 2, self.cart_y - int(self.picture_visor.get_height() / 2) + 250 / 2 + 10))
 
         self.screen.blit(self.picture_canon, (self.cart_x, self.cart_y))
 
-        # display all the bullets
-        for bullet in self.bullets:
-            bullet.display()
-
     def update(self):
+
+        # avoid that the cart moves out of the screen
+        if self.cart_x<30:
+            self.cart_x = 30
+        if self.cart_x>self.screen_size[0]-280:
+            self.cart_x = self.screen_size[0]-280
+
         # update all the bullets
         for bullet in self.bullets:
             bullet.update()
