@@ -1,7 +1,7 @@
 import pygame
 import sys
 from keyboard_handler import KeyboardHandler
-from maze import Maze
+from clouds import Clouds
 from search import Search
 from background import Background
 from ufo import Ufo
@@ -20,7 +20,7 @@ class Game:
         self.screen_size = (1300, 800)
         self.screen = pygame.display.set_mode(self.screen_size)
         self.keyboard_handler = KeyboardHandler()
-        self.maze = Maze(self.screen, self.screen_size)
+        self.maze = Clouds(self.screen, self.screen_size)
         self.maze.generate_clouds(9)
         self.search = Search(self.maze, self.screen)
         self.ufo = Ufo(self.screen_size,self.screen)
@@ -46,9 +46,10 @@ class Game:
         self.ufo.update(self.search, self.maze, self.canon)
         self.canon.read_data()
         self.canon.proces_data()
+        self.canon.update()
 
         #  if there is a collision between the cart and the enemy
-        if self.search.x > self.canon.cart_position+60 and self.search.x < self.canon.cart_position+160 and self.search.y > self.canon.cart_y+50 and self.search.y < self.canon.cart_y+150:
+        if self.search.x > self.canon.cart_x+60 and self.search.x < self.canon.cart_x+160 and self.search.y > self.canon.cart_y+50 and self.search.y < self.canon.cart_y+150:
             # finish the game and show the end screen
             self.game_finished = True
 

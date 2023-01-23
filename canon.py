@@ -1,6 +1,7 @@
 import pyfirmata
 import inspect
 import pygame
+from bullet import Bullet
 
 class Canon:
 
@@ -37,12 +38,14 @@ class Canon:
         self.EN = self.board.get_pin('d:9:o')
 
         # The position of the cart is at the center of the screen:
-        self.cart_position = screen_size[0]/2-125
+        self.cart_x = screen_size[0] / 2 - 125
         self.cart_speed = 3
         self.cart_y = 580
+        self.angle = 0
 
         self.canon = pygame.image.load('tank2.png')
         self.visor = pygame.image.load('cannon2.png')
+        self.bullets = []
 
         self.picture_canon = pygame.transform.scale(self.canon, (250, 250))
 
@@ -66,14 +69,14 @@ class Canon:
             self.IN1.write(0)
             self.IN2.write(1)
             self.EN.write(1)
-            self.cart_position -= self.cart_speed
+            self.cart_x -= self.cart_speed
             # print("left")
             # print(self.cart_position)
         elif self.drive_right_button_state is True:
             self.IN1.write(1)
             self.IN2.write(0)
             self.EN.write(1)
-            self.cart_position += self.cart_speed
+            self.cart_x += self.cart_speed
             # print("right")
             # print(self.cart_position)
         else:
@@ -108,9 +111,22 @@ class Canon:
     def display(self):
         self.picture_visor = pygame.transform.rotate(pygame.transform.scale(self.visor, (300, 375)), self.angle+30)
 
-        self.screen.blit(self.picture_visor, (self.cart_position - int(self.picture_visor.get_width() / 2) + 250/2,self.cart_y - int(self.picture_visor.get_height() / 2) + 250/2 + 10))
+        self.screen.blit(self.picture_visor, (self.cart_x - int(self.picture_visor.get_width() / 2) + 250 / 2, self.cart_y - int(self.picture_visor.get_height() / 2) + 250 / 2 + 10))
 
-        self.screen.blit(self.picture_canon, (self.cart_position, self.cart_y))
+        self.screen.blit(self.picture_canon, (self.cart_x, self.cart_y))
 
-    def shoot(self, intensity):
-        pass
+        # display all the bullets
+        for bullet in self.bullets:
+            bullet.display()
+
+    def update(self):
+        # update all the bullets
+        for bullet in self.bullets:
+            bullet.update()
+
+            # remove bullets which are out of the screen
+            if bullet.y<-200:
+                self.bullets.remove(bullet)
+
+    def shoot(self, shoot_intensity):
+        self.bullets.append(Bullet(self.cart_x,self.cart_y, self.angle,shoot_intensity, self.screen))

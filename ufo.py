@@ -24,7 +24,7 @@ class Ufo:
             else:
                 maze.set_source(maze.grid[int((self.x) / maze.cell_width)][int((self.y + self.ufo_height / 2) / maze.cell_height)+1])
 
-            maze.set_target(maze.grid[int((canon.cart_position+120)/maze.cell_width)][int((canon.cart_y+120)/maze.cell_height)])
+            maze.set_target(maze.grid[int((canon.cart_x + 120) / maze.cell_width)][int((canon.cart_y + 120) / maze.cell_height)])
             search.a_star_search()
 
         if self.x <= 0:

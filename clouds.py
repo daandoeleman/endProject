@@ -1,7 +1,7 @@
 from grid_element import GridElement
 from random import *
 
-class Maze:
+class Clouds:
     """
         Generates a grid based maze based on GridElements
         This class also contains search algorithms for
@@ -106,10 +106,10 @@ class Maze:
         self.generate_open_maze()
 
         for i in range(int(number_of_clouds)):
-            self.large_cloud(int((i-1)*self.distance_between_clouds),randint(4, 6))
+            self.large_cloud(int((i-1)*self.distance_between_clouds),randint(6, 8))
 
         for i in range(int(number_of_clouds-1)):
-            self.large_cloud(int((i)*self.distance_between_clouds+self.distance_between_clouds/2),randint(9, 11))
+            self.large_cloud(int((i)*self.distance_between_clouds+self.distance_between_clouds/2),randint(11, 13))
 
 
     def large_cloud(self,x,y):
