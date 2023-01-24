@@ -1,4 +1,4 @@
-# AI practice final project by Daan Doeleman and Jules Verhagen
+# AI practice final project of Daan Doeleman and Jules Verhagen
 
 # It's a small minigame cannon shooter. In our game, aliens attempt to conquer the earth,
 # but you may stop them by employing then-current technology, such as a cannon mounted on a cart.
