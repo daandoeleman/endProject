@@ -35,7 +35,7 @@ class Game:
         self.game_finished = False
         self.game_started = False
 
-        # initialise the songs and play the start song
+        # initialise the songs and play the start song, songs are from: www.zapsplat.com
         self.start_song = pygame.mixer.Sound("startSong.mp3")
         self.theme_song = pygame.mixer.Sound("themeSong.mp3")
         self.end_song = pygame.mixer.Sound("endSong.mp3")

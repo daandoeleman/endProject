@@ -77,7 +77,7 @@ class Clouds:
         # print all the lines in the grid, besides the outersquare lines
         for row in range(self.grid_size[0]):
             for col in range(self.grid_size[1]):
-                if row > 0 and row < self.grid_size[0]-1 and col > 0 and col < self.grid_size[1]-1:
+                if row > 0 and row < self.grid_size[0] and col > 0 and col < self.grid_size[1]:
                     self.grid[row][col].draw_grid_element(self.screen)
         return None
 

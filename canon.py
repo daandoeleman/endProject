@@ -137,7 +137,7 @@ class Canon:
             bullet.update()
 
             # remove bullets which are out of the screen
-            if bullet.y<-200:
+            if bullet.y>self.screen_size[1]:
                 self.bullets.remove(bullet)
 
     def shoot(self, shoot_intensity):

@@ -8,6 +8,8 @@ class Bullet:
         self.x = x
         self.y = y
         self.angle = 1.1 * angle + 125
+        self.gravity_force = 0.97
+        self.shoot_intensity = shoot_intensity
 
         # for left and right calculate with basic math the velocity in x and y direction
         if self.angle>90:
@@ -16,6 +18,8 @@ class Bullet:
         else:
             self.speed_y = math.tan(math.radians(self.angle))
             self.speed_x = 1
+
+        self.slope = self.speed_y
 
         # make sure that at (almost) vertical position (infinite slope, so infinite y speed) the y speed is limited
         if self.speed_y > 5:
@@ -36,6 +40,20 @@ class Bullet:
     def update(self):
         self.x += self.speed_x
         self.y -= self.speed_y
+        self.speed_y *= self.gravity_force
+
+        if self.speed_y<0.5 and self.speed_y > 0:
+            self.gravity_force = 1.03
+            self.speed_y *= -1
+
+        if self.speed_x>0:
+            self.angle = math.degrees(math.atan(self.speed_y/self.speed_x))
+            self.picture_bullet = pygame.transform.rotate(self.bullet_scaled, self.angle-90)
+        elif self.speed_x<0:
+            self.angle = 90+math.degrees(math.atan(self.speed_y/self.speed_x))
+            self.picture_bullet = pygame.transform.rotate(self.bullet_scaled, self.angle)
+        else:
+            self.angle = 90
 
     # method to rotate an image around its center from: https://www.pygame.org/wiki/RotateCenter
     def rot_center(self, image, angle):

@@ -18,6 +18,7 @@ class Background:
         self.grass = image.load('grass.png')
         self.end_stop_left = image.load('endStopLeft.png')
         self.end_stop_right = image.load('endStopRight.png')
+        self.background = image.load('background.png')
         self.sky = image.load('sky.png')    # image from: https://toppng.com/show_download/165652/ftestickers-background-sky-star-sky-star/large
 
         self.brick_size = 50
@@ -32,6 +33,7 @@ class Background:
         self.grass_picture = transform.scale(self.grass, (40, 40))
         self.bush_picture = transform.scale(self.bush, (25, 25))
         self.sky_picture = transform.scale(self.sky, (self.screen_size[0], 250))
+        self.background_picture = transform.scale(self.background, (self.screen_size[0], self.screen_size[1]))
         self.end_stop_left_image = transform.scale(self.end_stop_left, (70,70))
         self.end_stop_right_image = transform.scale(self.end_stop_right, (70,70))
 
@@ -78,7 +80,8 @@ class Background:
         self.tiles = math.ceil(screen_size[0] / self.brick_size) + 1
 
     def display(self):
-            draw.rect(self.screen, (66, 149, 245), Rect(0, 0, self.screen_size[0], self.screen_size[1]-130))
+            # the grass and sky on the background
+            self.screen.blit(self.background_picture, (0, 0))
 
             # display the stars/the sky
             self.screen.blit(self.sky_picture, (0,0))
