@@ -1,15 +1,8 @@
-from pygame import draw, font
+# method to draw a grit with its walls/elements. This code is used from the tutorials and only has small changes
 
-import sys
+from pygame import draw
 
 class GridElement:
-    """
-    GridElement used as a tile in the exercise
-    """
-
-    """
-    Initialise the GridElement and assign the starting values
-    """
 
     def __init__(self, x, y, size):
         self.position = (x, y)
@@ -20,106 +13,75 @@ class GridElement:
         self.score = None
         self.color = (66, 149, 245)
 
-    """
-    Overload the equals operator
-    """
-
+    # overload the equals operator
     def __eq__(self, other):
         return self.position == other.position
-    """
-    Overload the less than operator
-    """
 
+    # overload the less than operator
     def __lt__(self, other):
         return (self.score is not None) and (other.score is None or self.score < other.score)
 
-    """
-       Overload the hash operator
-    """
+    # overload the hash operator
     def __hash__(self):
         return hash(self.position)
-    """
-    Overload the string representation of the object
-    """
 
+    # overload the string representation of the object
     def __repr__(self):
         return "[%s, %s]" % (self.position, self.score)
 
-    """
-    Remove all neighbours
-    """
-
+    # remove all neighbours
     def reset_neighbours(self):
         self.neighbours = []
 
-    """
-    Sets the state of the GridElement 
-    """
-
+    # sets the state of the GridElement
     def reset_state(self):
         self.parent = None
         self.score = None
         self.distance = None
         self.color = (66, 149, 245)
 
+    # get all neighbouring nodes
     def get_neighbours(self):
         return self.neighbours[:]
 
-    """
-     Method to calculate the Manhattan distance from a certain 
-     GridElement to another GridElement of the exercise
-     """
-
+    # method to calculate the manhattan distance from one node to another
     def manhattan_distance(self, other):
         x_distance = abs(self.position[0] - other.position[0])
         y_distance = abs(self.position[1] - other.position[1])
         return x_distance + y_distance
 
-    def null_distance(self, other):
-        x_distance = abs(self.position[0] - other.position[0])
-        y_distance = abs(self.position[1] - other.position[1])
-        return max(x_distance ,y_distance)
-
+    # method to get the direction of a certain node
     def direction(self, other):
         return other.position[0] - self.position[0], other.position[1] - self.position[1]
 
+    # method to set the score to a certain value
     def set_score(self, score):
         self.score = score
 
+    # method to set the distance to a certain value
     def set_distance(self, distance):
         self.distance = distance
 
+    # method to get the current distance
     def get_distance(self):
         return self.distance
 
+    # method to get the current score
     def get_score(self):
         return self.score
 
+    # method to get the current position
     def get_position(self):
         return self.position
 
-    """
-    Assign the GridElement used to reach this GridElement
-    """
-
+    # assign the GridElement used to reach this GridElement
     def set_parent(self, parent):
         self.parent = parent
         if parent.distance is not None:
             self.distance = parent.distance+1
 
-    def set_color(self, color):
-        self.color = color
-
-    """
-    Draw the GridElement
-    """
-
+    # draw the GridElement
     def draw_grid_element(self, surface):
-        # the rect for the source and target
-        # draw.rect(surface, self.color,
-        #            (self.position[0] * self.size[0], self.position[1] * self.size[1], self.size[0], self.size[1]), 0)
-
-        # discard the directions where neighbours are
         compass = [(0, -1), (1, 0), (0, 1), (-1, 0)]  # The four directions
         for neighbour in self.neighbours:
             if self.direction(neighbour) in compass:
@@ -139,7 +101,7 @@ class GridElement:
                 draw.line(surface, (255, 255, 255), (self.position[0] * self.size[0], self.position[1] * self.size[1]),
                           (self.position[0] * self.size[0], (self.position[1] + 1) * self.size[1]), 6)
 
-        # This draw an arrow to from the parent
+        # This draw an arrow to from the parent, but in our game we dont want such spoilers so we commented it, but for testing purposes it could be uncommented
         # if self.parent is not None:
         #
         #     vector = self.direction(self.parent)
@@ -159,7 +121,7 @@ class GridElement:
         #     end_point = (center[0] + vector[0] * self.size[0] / 5, center[1] + vector[1] * self.size[1] / 5)
         #     draw.line(surface, (100,100,100),end_point,entry_point,int(self.size[0]/20)+1)
 
-
+    # method to print all the neighbouring nodes
     def print_neighbours(self):
 
         directions = []
@@ -178,6 +140,7 @@ class GridElement:
         print(directions)
         return None
 
+    # method to print all the walls
     def print_walls(self):
         # discard the directions where neighbours are
         compass = {(0, -1): "North",
