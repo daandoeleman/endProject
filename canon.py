@@ -16,9 +16,12 @@ class Canon:
         self.it = pyfirmata.util.Iterator(self.board)
         self.it.start()
 
+        # load the song for the shooting
+        self.shooting_sound = pygame.mixer.Sound("shoot.mp3")
+
         # Define the pins and counters
         # For the buttons:
-        self.shoot_intensity = 0
+        self.shoot_intensity = 10
         self.shoot_button = self.board.get_pin('d:10:i')
         self.drive_left_button = self.board.get_pin('d:12:i')
         self.drive_right_button = self.board.get_pin('d:11:i')
@@ -85,20 +88,21 @@ class Canon:
 
         if self.shoot_button_state is True:
             self.shoot_intensity += 1    # increase the counter and turn on the leds when the counter increases
-            if self.shoot_intensity > 10:
+            if self.shoot_intensity > 20:
                 self.led1.write(1)
-                if self.shoot_intensity > 20:
+                if self.shoot_intensity > 30:
                     self.led2.write(1)
-                    if self.shoot_intensity > 30:
+                    if self.shoot_intensity > 40:
                         self.led3.write(1)
-                        if self.shoot_intensity > 40:
+                        if self.shoot_intensity > 50:
                             self.led4.write(1)
-                            if self.shoot_intensity > 50:
+                            if self.shoot_intensity > 60:
                                 self.led5.write(1)
-                                self.shoot_intensity -= 1        # limit the counter to max 50
+                                self.shoot_intensity -= 1        # limit the counter to max 60
         else:
-            if self.shoot_intensity > 0:         # if the button is released then shoot with the given strength
+            if self.shoot_intensity > 10:         # if the button is released then shoot with the given strength
                 self.shoot(self.shoot_intensity)
+                pygame.mixer.Sound.play(self.shooting_sound)
                 # print("shoot", self.shoot_intensity)
 
             # turn all the leds off and reset counter
@@ -107,7 +111,7 @@ class Canon:
             self.led3.write(0)
             self.led4.write(0)
             self.led5.write(0)
-            self.shoot_intensity = 0
+            self.shoot_intensity = 10
 
     def display(self):
         # display all the bullets

@@ -1,5 +1,6 @@
 from grid_element import GridElement
 from random import *
+import pygame
 
 class Clouds:
     """
@@ -12,6 +13,12 @@ class Clouds:
     def __init__(self, screen, screen_size):
         self.screen = screen
         self.screen_size = screen_size
+
+        self.cloud = pygame.image.load('cloud.png')
+        self.cloud_image = pygame.transform.scale(self.cloud, (100,100))
+        self.clouds_x = []
+        self.clouds_y = []
+
         self.cell_width = 20
         self.cell_height = 20
         self.grid_size = (int(screen_size[0]/self.cell_width), int((screen_size[1])/self.cell_height))
@@ -28,6 +35,10 @@ class Clouds:
     """
     Resets the GridElements of the maze
     """
+
+    def display(self):
+        for i in range(len(self.clouds_x)):
+            self.screen.blit(self.cloud_image, (self.clouds_x[i],self.clouds_y[i]))
 
     def reset_all(self):
         for row in self.grid:
@@ -113,6 +124,10 @@ class Clouds:
 
 
     def large_cloud(self,x,y):
+
+        self.clouds_x.append(x*20+20)
+        self.clouds_y.append(y*20)
+
         self.del_link(self.grid[x+2][y], self.grid[x+2][y+1])
         self.del_link(self.grid[x+3][y], self.grid[x+3][y+1])
         self.del_link(self.grid[x+4][y], self.grid[x+4][y+1])
