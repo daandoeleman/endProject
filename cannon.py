@@ -5,7 +5,7 @@ import inspect
 import pygame
 from bullet import Bullet
 
-class Canon:
+class Cannon:
 
     def __init__(self, screen, screen_size):
 
@@ -25,10 +25,10 @@ class Canon:
         # load the song for the shooting
         self.shooting_sound = pygame.mixer.Sound("shoot.mp3")
 
-        # load the images for the cannon and cart and scale the canon
-        self.canon = pygame.image.load('tank2.png')
+        # load the images for the cannon and cart and scale the n
+        self.cannon = pygame.image.load('tank2.png')
         self.visor = pygame.image.load('cannon2.png')
-        self.picture_canon = pygame.transform.scale(self.canon, (250, 250))
+        self.picture_cannon = pygame.transform.scale(self.cannon, (250, 250))
 
         # define the pins and counters
             # for the buttons:
@@ -126,7 +126,7 @@ class Canon:
         self.screen.blit(self.picture_visor, (self.cart_x - int(self.picture_visor.get_width() / 2) + 250 / 2, self.cart_y - int(self.picture_visor.get_height() / 2) + 250 / 2 + 10))
 
         # display the cannon
-        self.screen.blit(self.picture_canon, (self.cart_x, self.cart_y))
+        self.screen.blit(self.picture_cannon, (self.cart_x, self.cart_y))
 
     def update(self):
 

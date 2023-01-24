@@ -11,7 +11,7 @@ from keyboard_handler import KeyboardHandler
 from background import Background
 from ufo import Ufo
 from clouds import Clouds
-from canon import Canon
+from cannon import Cannon
 from end_screen import End_screen
 from start_screen import Start_screen
 
@@ -28,7 +28,7 @@ class Game:
         self.keyboard_handler = KeyboardHandler()
         self.clouds = Clouds(self.screen, self.screen_size)
         self.ufo = Ufo(self.screen_size,self.screen, self.clouds)
-        self.canon = Canon(self.screen, self.screen_size)
+        self.cannon = Cannon(self.screen, self.screen_size)
         self.background = Background(self.screen, self.screen_size)
         self.end_screen = End_screen(self.screen, self.screen_size)
         self.start_screen = Start_screen(self.screen, self.screen_size)
@@ -59,13 +59,13 @@ class Game:
     def update(self):
         # if you are not at the start or and screen then update the game field
         if self.game_started is True and self.game_finished is False:
-            self.ufo.update(self.clouds, self.canon)
-            self.canon.read_data()
-            self.canon.proces_data()
-            self.canon.update()
+            self.ufo.update(self.clouds, self.cannon)
+            self.cannon.read_data()
+            self.cannon.proces_data()
+            self.cannon.update()
 
         #  if there is a collision between the cart and the enemy
-        if self.ufo.enemy.x > self.canon.cart_x+60 and self.ufo.enemy.x < self.canon.cart_x+160 and self.ufo.enemy.y > self.canon.cart_y+50 and self.ufo.enemy.y < self.canon.cart_y+150:
+        if self.ufo.enemy.x > self.cannon.cart_x+60 and self.ufo.enemy.x < self.cannon.cart_x+160 and self.ufo.enemy.y > self.cannon.cart_y+50 and self.ufo.enemy.y < self.cannon.cart_y+150:
             # finish the game and show the end screen
             self.game_finished = True
 
@@ -75,27 +75,27 @@ class Game:
 
             # reset the enemy so that the collision won't keep happening again and again and give it a new path to avoid keeping moving on the collision path
             self.clouds.set_source(self.clouds.grid[0][0])
-            self.ufo.enemy.find_path(self.clouds, self.canon, self.ufo.speed, self.ufo.x, self.ufo.y)
-            self.ufo.enemy.update(self.clouds, self.canon, self.ufo.speed, self.ufo.x, self.ufo.y)
+            self.ufo.enemy.find_path(self.clouds, self.cannon, self.ufo.speed, self.ufo.x, self.ufo.y)
+            self.ufo.enemy.update(self.clouds, self.cannon, self.ufo.speed, self.ufo.x, self.ufo.y)
 
             # reset the drawing speed (the difficulty)
             self.ufo.enemy.drawing_speed = 20
 
             # remove all the bullets from the field
-            for bullet in self.canon.bullets:
-                self.canon.bullets.remove(bullet)
-
+            for bullet in self.cannon.bullets:
+                self.cannon.bullets.remove(bullet)
+                self.cannon.update()
 
         # if there is a collision between the enemy and one of the bullets then reset enemy
-        for bullet in self.canon.bullets:
+        for bullet in self.cannon.bullets:
             if self.ufo.enemy.x > bullet.x + 90 and self.ufo.enemy.x < bullet.x + 130 and self.ufo.enemy.y > bullet.y + 100 and self.ufo.enemy.y < bullet.y + 140:
                 # reset the enemy to the position of the ufo and start the search
                 self.clouds.set_source(self.clouds.grid[int((self.ufo.x + self.ufo.ufo_width / 2) / self.clouds.cell_width)][int((self.ufo.y + self.ufo.ufo_height / 2) / self.clouds.cell_height)])
-                self.ufo.enemy.find_path(self.clouds, self.canon, self.ufo.speed, self.ufo.x, self.ufo.y)
-                self.ufo.enemy.update(self.clouds, self.canon, self.ufo.speed, self.ufo.x, self.ufo.y)
+                self.ufo.enemy.find_path(self.clouds, self.cannon, self.ufo.speed, self.ufo.x, self.ufo.y)
+                self.ufo.enemy.update(self.clouds, self.cannon, self.ufo.speed, self.ufo.x, self.ufo.y)
 
                 # remove the bullet which killed the enemy
-                self.canon.bullets.remove(bullet)
+                self.cannon.bullets.remove(bullet)
 
                 # increase the drawing speed of the enemy, so increase the difficulty, but maximise it at 1
                 self.ufo.enemy.drawing_speed = int(self.ufo.enemy.drawing_speed/1.2)
@@ -118,7 +118,7 @@ class Game:
             # self.clouds.draw_maze()           # the maze cloud shapes in the grid
             self.clouds.display()               # the images of the clouds
             self.ufo.display()                  # display the ufo and its enemies on the screen
-            self.canon.display()                # display the cannon on the screen
+            self.cannon.display()                # display the cannon on the screen
 
         pygame.display.flip()
 
@@ -144,8 +144,8 @@ class Game:
 
             # set the enemy to the position of the ufo and start the search
             self.clouds.set_source(self.clouds.grid[int((self.ufo.x + self.ufo.ufo_width / 2) / self.clouds.cell_width)][int((self.ufo.y + self.ufo.ufo_height / 2) / self.clouds.cell_height)])
-            self.ufo.enemy.find_path(self.clouds, self.canon, self.ufo.speed, self.ufo.x, self.ufo.y)
-            self.ufo.enemy.update(self.clouds, self.canon, self.ufo.speed, self.ufo.x, self.ufo.y)
+            self.ufo.enemy.find_path(self.clouds, self.cannon, self.ufo.speed, self.ufo.x, self.ufo.y)
+            self.ufo.enemy.update(self.clouds, self.cannon, self.ufo.speed, self.ufo.x, self.ufo.y)
 
     # handle all the different possible input events
     def handle_events(self):
